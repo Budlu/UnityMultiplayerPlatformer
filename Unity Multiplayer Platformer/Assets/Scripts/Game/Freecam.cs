@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Freecam : MonoBehaviour
 {
-    [SerializeField] float scrollSpeed = 15f, scrollThreshold = 10f, zoomSpeed = 5f;
+    [SerializeField] float scrollSpeed = 15f, scrollThreshold = 10f, zoomSpeed = 15f;
     [SerializeField] float width = 40f, height = 40f;
     [SerializeField] float startSize = 5f, minSize = 5f, maxSize;
-    float minX, maxX, minY, maxY, startMaxX, startMaxY;
+    float minX, maxX, minY, maxY;
 
     Camera cam;
 
@@ -20,9 +20,6 @@ public class Freecam : MonoBehaviour
         maxX = width - minX - 1f;
         minY = startSize - 0.5f;
         maxY = height - minY - 1f;
-
-        startMaxX = maxX;
-        startMaxY = maxY;
 
         maxSize = Mathf.Min(width / cam.aspect / 2, height / 2);
     }
@@ -40,7 +37,7 @@ public class Freecam : MonoBehaviour
         if (dScroll == Vector2.zero)
             return;
 
-        float targetSize = cam.orthographicSize + dScroll.y * zoomSpeed * Time.deltaTime;
+        float targetSize = cam.orthographicSize + -dScroll.y * zoomSpeed * Time.deltaTime;
         cam.orthographicSize = Mathf.Clamp(targetSize, minSize, maxSize);
 
         minX = cam.orthographicSize * cam.aspect - 0.5f;

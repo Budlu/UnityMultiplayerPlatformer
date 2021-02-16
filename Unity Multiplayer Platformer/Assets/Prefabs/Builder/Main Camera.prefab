@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: 15
   scrollThreshold: 10
-  zoomSpeed: 5
+  zoomSpeed: 15
   width: 40
   height: 40
   startSize: 5

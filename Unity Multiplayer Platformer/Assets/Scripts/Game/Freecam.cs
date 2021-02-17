@@ -10,9 +10,12 @@ public class Freecam : MonoBehaviour
     float minX, maxX, minY, maxY;
 
     Camera cam;
+    GridGenerator grid;
 
     void Start()
     {
+        grid = FindObjectOfType<GridGenerator>();
+
         cam = GetComponent<Camera>();
         cam.orthographicSize = startSize;
 
@@ -40,10 +43,13 @@ public class Freecam : MonoBehaviour
         float targetSize = cam.orthographicSize + -dScroll.y * zoomSpeed * Time.deltaTime;
         cam.orthographicSize = Mathf.Clamp(targetSize, minSize, maxSize);
 
-        minX = cam.orthographicSize * cam.aspect - 0.5f;
+        float size = cam.orthographicSize;
+        minX = size * cam.aspect - 0.5f;
         maxX = width - minX - 1f;
-        minY = cam.orthographicSize - 0.5f;
+        minY = size - 0.5f;
         maxY = height - minY - 1f;
+
+        grid.MultiplyLineWidth(size / startSize);
     }
 
     void Move()

@@ -11,6 +11,8 @@ public class GridGenerator : MonoBehaviour
     List<GameObject> horizontalLines = new List<GameObject>();
     List<GameObject> verticalLines = new List<GameObject>();
 
+    bool visible = true;
+
     void Start()
     {
         for (int i = 0; i <= height; i++)
@@ -42,6 +44,34 @@ public class GridGenerator : MonoBehaviour
         foreach (GameObject line in verticalLines)
         {
             line.transform.localScale = new Vector3(lineWidth * multiplier, height, 0);
+        }
+    }
+
+    void Update()
+    {
+        GridToggle();
+    }
+
+    private void GridToggle()
+    {
+        if (Input.GetKeyDown(InputManager.Instance.map[Inputs.grid]))
+        {
+            ToggleVisibility();
+        }
+    }
+
+    private void ToggleVisibility()
+    {
+        visible = !visible;
+
+        foreach (GameObject line in horizontalLines)
+        {
+            line.SetActive(visible);
+        }
+
+        foreach (GameObject line in verticalLines)
+        {
+            line.SetActive(visible);
         }
     }
 }

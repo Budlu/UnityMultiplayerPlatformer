@@ -36,9 +36,8 @@ public class InputManager : MonoBehaviour
         };
     }
 
-    public void onControlsChanged(EventArgs e)
+    public void onControlsChanged()
     {
-        EventHandler handler = ControlsChanged;
-        handler?.Invoke(this, e);
+        ControlsChanged?.Invoke(this, EventArgs.Empty);
     }
 }

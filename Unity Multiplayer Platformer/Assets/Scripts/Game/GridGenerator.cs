@@ -11,10 +11,14 @@ public class GridGenerator : MonoBehaviour
     List<GameObject> horizontalLines = new List<GameObject>();
     List<GameObject> verticalLines = new List<GameObject>();
 
+    KeyCode gridToggleKey;
     bool visible = true;
 
     void Start()
     {
+        UpdateGridKey(this, System.EventArgs.Empty);
+        InputManager.Instance.ControlsChanged += UpdateGridKey;
+
         for (int i = 0; i <= height; i++)
         {
             GameObject line = Instantiate(gridLine, transform);
@@ -54,7 +58,7 @@ public class GridGenerator : MonoBehaviour
 
     private void GridToggle()
     {
-        if (Input.GetKeyDown(InputManager.Instance.map[Inputs.grid]))
+        if (Input.GetKeyDown(gridToggleKey))
         {
             ToggleVisibility();
         }
@@ -73,5 +77,10 @@ public class GridGenerator : MonoBehaviour
         {
             line.SetActive(visible);
         }
+    }
+
+    private void UpdateGridKey(object sender, System.EventArgs e)
+    {
+        gridToggleKey = InputManager.Instance.map[Inputs.grid];
     }
 }

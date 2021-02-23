@@ -5,7 +5,18 @@ using UnityEngine;
 
 public enum Inputs
 {
-    grid
+    grid,
+    slot1,
+    slot2,
+    slot3,
+    slot4,
+    slot5,
+    slot6,
+    slot7,
+    slot8,
+    slot9,
+    select1,
+    select2
 }
 
 public class InputManager : MonoBehaviour
@@ -14,17 +25,11 @@ public class InputManager : MonoBehaviour
     public Dictionary<Inputs, KeyCode> map;
     public event EventHandler ControlsChanged;
 
-    private void Awake()
+    void Awake()
     {
-        if (FindObjectsOfType<InputManager>().Length > 1)
-        {
-            gameObject.SetActive(false);
-            Destroy(gameObject);
-        }
-        else
+        if (!(FindObjectsOfType<InputManager>().Length > 1))
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
     }
 
@@ -32,7 +37,18 @@ public class InputManager : MonoBehaviour
     {
         map = new Dictionary<Inputs, KeyCode>()
         {
-            { Inputs.grid, KeyCode.G }
+            { Inputs.grid, KeyCode.G },
+            { Inputs.slot1, KeyCode.Alpha1 },
+            { Inputs.slot2, KeyCode.Alpha2 },
+            { Inputs.slot3, KeyCode.Alpha3 },
+            { Inputs.slot4, KeyCode.Alpha4 },
+            { Inputs.slot5, KeyCode.Alpha5 },
+            { Inputs.slot6, KeyCode.Alpha6 },
+            { Inputs.slot7, KeyCode.Alpha7 },
+            { Inputs.slot8, KeyCode.Alpha8 },
+            { Inputs.slot9, KeyCode.Alpha9 },
+            { Inputs.select1, KeyCode.Mouse0 },
+            { Inputs.select2, KeyCode.Mouse1 }
         };
     }
 

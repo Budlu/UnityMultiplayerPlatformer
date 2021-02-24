@@ -35,17 +35,17 @@ public class Block
         }
     }
 
-    public BlockType getType()
+    public BlockType GetBlockType()
     {
         return type;
     }
 
-    public int getRotation()
+    public int GetRotation()
     {
         return rotation;
     }
 
-    public int getSpriteId()
+    public int GetSpriteId()
     {
         return spriteId;
     }

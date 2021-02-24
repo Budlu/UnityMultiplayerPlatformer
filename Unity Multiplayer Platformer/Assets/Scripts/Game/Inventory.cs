@@ -5,27 +5,32 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     [SerializeField] int activeSlot = 0;
-    int itemSlots = 9;
+    int itemSlots = 10;
 
+    BuildManager bm;
     Block[] items;
     KeyCode[] keys;
 
     void Start()
     {
+        bm = GetComponent<BuildManager>();
         items = new Block[itemSlots];
 
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < items.Length-1; i++)
         {
             items[i] = new Block(BlockType.square, 0, 0);
         }
+        items[items.Length - 1] = new Block(BlockType.empty, 0, 0);
 
         keys = new KeyCode[itemSlots];
 
-        UpdateKeys(this, System.EventArgs.Empty);
+        UpdateKeys();
         InputManager.Instance.ControlsChanged += UpdateKeys;
+
+        ChangeSlot(0);
     }
 
-    private void UpdateKeys(object sender, System.EventArgs args)
+    private void UpdateKeys()
     {
         Dictionary<Inputs, KeyCode> map = InputManager.Instance.map;
 
@@ -38,6 +43,7 @@ public class Inventory : MonoBehaviour
         keys[6] = map[Inputs.slot7];
         keys[7] = map[Inputs.slot8];
         keys[8] = map[Inputs.slot9];
+        keys[9] = map[Inputs.slot10];
     }
 
     void Update()
@@ -59,6 +65,14 @@ public class Inventory : MonoBehaviour
     private void ChangeSlot(int slot)
     {
         activeSlot = slot;
+
+        // Change to if later when doing UI highlighting
+        bm.SetErasing(slot == itemSlots - 1);
+
+        Block newBlock = items[slot];
+        Sprite selectedSprite = BlockData.Instance.sprites[(int)newBlock.GetBlockType()][newBlock.GetSpriteId()];
+
+        bm.UpdateHoverBlock(selectedSprite);
     }
 
     public Block GetSelectedBlock()

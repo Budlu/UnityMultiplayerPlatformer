@@ -7,10 +7,14 @@ public class BuildManager : MonoBehaviour
     public static BuildManager Instance;
 
     [SerializeField] Transform worldHolder;
+    [SerializeField] SpriteRenderer hoverSprite;
+    [SerializeField] float hoverAlpha = 0.5f;
 
     // Get size from somewhere
     int height = 40, width = 40;
     bool placing = true;
+    bool erasing = false;
+    float hoverOffset;
 
     RenderedBlock[,] world;
     Inventory inv;
@@ -34,7 +38,19 @@ public class BuildManager : MonoBehaviour
 
     void Start()
     {
-        world = new RenderedBlock[height,width];
+        InitializeWorld();
+        inv = GetComponent<Inventory>();
+        cam = FindObjectOfType<Camera>();
+
+        hoverOffset = hoverSprite.transform.position.z;
+
+        UpdateSelectKey();
+        InputManager.Instance.ControlsChanged += UpdateSelectKey;
+    }
+
+    private void InitializeWorld()
+    {
+        world = new RenderedBlock[height, width];
         for (int i = 0; i < height; i++)
         {
             for (int k = 0; k < width; k++)
@@ -48,15 +64,9 @@ public class BuildManager : MonoBehaviour
                 world[i, k] = renderedBlock;
             }
         }
-
-        inv = GetComponent<Inventory>();
-        cam = FindObjectOfType<Camera>();
-
-        UpdateSelectKey(this, System.EventArgs.Empty);
-        InputManager.Instance.ControlsChanged += UpdateSelectKey;
     }
 
-    private void UpdateSelectKey(object sender, System.EventArgs args)
+    private void UpdateSelectKey()
     {
         select1 = InputManager.Instance.map[Inputs.select1];
     }
@@ -68,7 +78,7 @@ public class BuildManager : MonoBehaviour
 
     private void CheckForPlacement()
     {
-        if (placing && Input.GetKeyDown(select1))
+        if (placing)
         {
             Vector2 placePos = cam.ScreenToWorldPoint(Input.mousePosition);
             placePos = new Vector2(placePos.x + 0.5f, placePos.y + 0.5f);
@@ -79,10 +89,27 @@ public class BuildManager : MonoBehaviour
             if (yInt >= height || xInt >= width || yInt < 0 || xInt < 0)
                 return;
 
-            RenderedBlock renderedBlock = world[xInt, yInt];
+            hoverSprite.transform.position = new Vector3(xInt, yInt, hoverOffset);
 
-            if (renderedBlock.GetBlock().getType() == BlockType.empty)
-                Place(inv.GetSelectedBlock(), xInt, yInt);
+            RenderedBlock renderedBlock = world[xInt, yInt];
+            if (renderedBlock.GetBlock().GetBlockType() == BlockType.empty)
+            {
+                hoverSprite.color = new Color(0, 1, 0, hoverAlpha);
+
+                if (Input.GetKey(select1))
+                    Place(inv.GetSelectedBlock(), xInt, yInt);
+            }
+            else if (erasing)
+            {
+                hoverSprite.color = new Color(0, 1, 0, hoverAlpha);
+
+                if (Input.GetKey(select1))
+                    Place(inv.GetSelectedBlock(), xInt, yInt);
+            }
+            else
+            {
+                hoverSprite.color = new Color(1, 0, 0, hoverAlpha);
+            }
         }
     }
 
@@ -94,5 +121,15 @@ public class BuildManager : MonoBehaviour
     public void SetPlacing(bool placing)
     {
         this.placing = placing;
+    }
+
+    public void SetErasing(bool erasing)
+    {
+        this.erasing = erasing;
+    }
+
+    public void UpdateHoverBlock(Sprite sprite)
+    {
+        hoverSprite.sprite = sprite;
     }
 }

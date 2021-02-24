@@ -10,8 +10,8 @@ public class RenderedBlock : MonoBehaviour
     public void SetBlock(Block block)
     {
         this.block = block;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90 * block.getRotation()));
-        spriteRenderer.sprite = BlockData.Instance.sprites[(int)block.getType()][block.getSpriteId()];
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90 * block.GetRotation()));
+        spriteRenderer.sprite = BlockData.Instance.sprites[(int)block.GetBlockType()][block.GetSpriteId()];
     }
 
     public Block GetBlock()

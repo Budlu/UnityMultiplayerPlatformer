@@ -15,6 +15,7 @@ public enum Inputs
     slot7,
     slot8,
     slot9,
+    slot10,
     select1,
     select2
 }
@@ -23,7 +24,7 @@ public class InputManager : MonoBehaviour
 {
     public static InputManager Instance;
     public Dictionary<Inputs, KeyCode> map;
-    public event EventHandler ControlsChanged;
+    public event Action ControlsChanged;
 
     void Awake()
     {
@@ -47,6 +48,7 @@ public class InputManager : MonoBehaviour
             { Inputs.slot7, KeyCode.Alpha7 },
             { Inputs.slot8, KeyCode.Alpha8 },
             { Inputs.slot9, KeyCode.Alpha9 },
+            { Inputs.slot10, KeyCode.E },
             { Inputs.select1, KeyCode.Mouse0 },
             { Inputs.select2, KeyCode.Mouse1 }
         };
@@ -54,6 +56,6 @@ public class InputManager : MonoBehaviour
 
     public void onControlsChanged()
     {
-        ControlsChanged?.Invoke(this, EventArgs.Empty);
+        ControlsChanged?.Invoke();
     }
 }

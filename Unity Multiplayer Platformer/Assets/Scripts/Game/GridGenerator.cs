@@ -16,7 +16,7 @@ public class GridGenerator : MonoBehaviour
 
     void Start()
     {
-        UpdateGridKey(this, System.EventArgs.Empty);
+        UpdateGridKey();
         InputManager.Instance.ControlsChanged += UpdateGridKey;
 
         for (int i = 0; i <= height; i++)
@@ -79,7 +79,7 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
-    private void UpdateGridKey(object sender, System.EventArgs e)
+    private void UpdateGridKey()
     {
         gridToggleKey = InputManager.Instance.map[Inputs.grid];
     }

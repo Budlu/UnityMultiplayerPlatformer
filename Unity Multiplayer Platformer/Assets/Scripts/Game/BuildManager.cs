@@ -128,8 +128,9 @@ public class BuildManager : MonoBehaviour
         this.erasing = erasing;
     }
 
-    public void UpdateHoverBlock(Sprite sprite)
+    public void UpdateHoverBlock(Block block)
     {
-        hoverSprite.sprite = sprite;
+        hoverSprite.transform.rotation = Quaternion.Euler(0, 0, block.GetRotation() * 90);
+        hoverSprite.sprite = BlockData.Instance.sprites[(int)block.GetBlockType()][block.GetSpriteId()];
     }
 }

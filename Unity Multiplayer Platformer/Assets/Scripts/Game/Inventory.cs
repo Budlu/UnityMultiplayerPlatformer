@@ -10,6 +10,7 @@ public class Inventory : MonoBehaviour
     BuildManager bm;
     Block[] items;
     KeyCode[] keys;
+    KeyCode rotate;
 
     void Start()
     {
@@ -44,11 +45,14 @@ public class Inventory : MonoBehaviour
         keys[7] = map[Inputs.slot8];
         keys[8] = map[Inputs.slot9];
         keys[9] = map[Inputs.slot10];
+
+        rotate = map[Inputs.rotate];
     }
 
     void Update()
     {
         CheckKeyPress();
+        CheckRotate();
     }
 
     private void CheckKeyPress()
@@ -70,9 +74,18 @@ public class Inventory : MonoBehaviour
         bm.SetErasing(slot == itemSlots - 1);
 
         Block newBlock = items[slot];
-        Sprite selectedSprite = BlockData.Instance.sprites[(int)newBlock.GetBlockType()][newBlock.GetSpriteId()];
+        bm.UpdateHoverBlock(newBlock);
+    }
 
-        bm.UpdateHoverBlock(selectedSprite);
+    private void CheckRotate()
+    {
+        if (Input.GetKeyDown(rotate) && activeSlot != itemSlots-1)
+        {
+            Block block = items[activeSlot];
+
+            block.Rotate();
+            bm.UpdateHoverBlock(block);
+        }
     }
 
     public Block GetSelectedBlock()

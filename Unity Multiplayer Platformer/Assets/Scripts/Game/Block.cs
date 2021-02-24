@@ -27,6 +27,14 @@ public class Block
         this.rotation = rotation;
     }
 
+    public void Rotate()
+    {
+        rotation += 1;
+
+        if (rotation >= 4)
+            rotation = 0;
+    }
+
     public void SetSpriteId(int spriteId)
     {
         if (spriteId < BlockData.Instance.sprites[(int)type].Length && spriteId >= 0)

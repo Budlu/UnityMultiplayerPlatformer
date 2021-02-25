@@ -49,6 +49,12 @@ public class Freecam : MonoBehaviour
         minY = size - 0.5f;
         maxY = height - minY - 1f;
 
+        if (maxX < minX)
+            maxX = minX;
+
+        if (maxY < minY)
+            maxY = minY;
+
         grid.MultiplyLineWidth(size / startSize);
     }
 

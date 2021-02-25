@@ -335,3 +335,97 @@ System memory in use after: 87.6 MB.
 Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 2265.
 Total: 1.882100 ms (FindLiveObjects: 0.172200 ms CreateObjectMapping: 0.065200 ms MarkObjects: 1.628900 ms  DeleteObjects: 0.015000 ms)
 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.001783 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.30 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.761 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.40 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1772 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 87.5 MB.
+System memory in use after: 87.6 MB.
+
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 2268.
+Total: 3.679900 ms (FindLiveObjects: 0.329600 ms CreateObjectMapping: 0.135900 ms MarkObjects: 3.147900 ms  DeleteObjects: 0.064800 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 394.939423 seconds.
+  path: Assets/Scripts/Game/Freecam.cs
+  artifactKey: Guid(1bcb120d43844084485fb698a05a0022) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Game/Freecam.cs using Guid(1bcb120d43844084485fb698a05a0022) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '948327f16603be7125bf0fe54e1a1bf9') in 0.005993 seconds
+  Import took 0.011903 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.001484 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.30 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.835 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.34 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1772 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 87.5 MB.
+System memory in use after: 87.6 MB.
+
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 2271.
+Total: 1.826500 ms (FindLiveObjects: 0.160700 ms CreateObjectMapping: 0.051400 ms MarkObjects: 1.598100 ms  DeleteObjects: 0.015600 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 99.333052 seconds.
+  path: Assets/Scripts/Game/Freecam.cs
+  artifactKey: Guid(1bcb120d43844084485fb698a05a0022) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Game/Freecam.cs using Guid(1bcb120d43844084485fb698a05a0022) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '23113c54a65e4fa975bb4525395bfd14') in 0.005543 seconds
+  Import took 0.010552 seconds .
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.074690 seconds.
+  path: Assets/Scripts/Game/Freecam.cs
+  artifactKey: Guid(1bcb120d43844084485fb698a05a0022) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scripts/Game/Freecam.cs using Guid(1bcb120d43844084485fb698a05a0022) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '23113c54a65e4fa975bb4525395bfd14') in 0.003990 seconds
+  Import took 0.011399 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.001907 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.32 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.891 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.33 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1772 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 87.5 MB.
+System memory in use after: 87.6 MB.
+
+Unloading 7 unused Assets to reduce memory usage. Loaded Objects now: 2274.
+Total: 1.895500 ms (FindLiveObjects: 0.190300 ms CreateObjectMapping: 0.063400 ms MarkObjects: 1.623100 ms  DeleteObjects: 0.017800 ms)
+
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file

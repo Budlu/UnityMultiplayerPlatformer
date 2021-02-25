@@ -7,14 +7,15 @@ public enum BlockType
     empty,
     square,
     slope,
-    oneDirectional
+    oneDirectional,
+    eraser
 }
 
 public class BlockData : MonoBehaviour
 {
     public static BlockData Instance;
 
-    public List<Sprite[]> sprites = new List<Sprite[]>();
+    public Dictionary<BlockType, Sprite[]> sprites = new Dictionary<BlockType, Sprite[]>();
     public GameObject[] prefabs;
 
     void Awake()
@@ -31,10 +32,14 @@ public class BlockData : MonoBehaviour
         // UPDATE LATER
         Sprite[] empty = new Sprite[1];
         empty[0] = Resources.Load<Sprite>("Blocks/Empty");
-        sprites.Add(empty);
+        sprites.Add(BlockType.empty, empty);
 
         Sprite[] square = new Sprite[1];
         square[0] = Resources.Load<Sprite>("Blocks/Square");
-        sprites.Add(square);
+        sprites.Add(BlockType.square, square);
+
+        Sprite[] eraser = new Sprite[1];
+        eraser[0] = Resources.Load<Sprite>("Blocks/Eraser");
+        sprites.Add(BlockType.eraser, eraser);
     }
 }

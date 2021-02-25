@@ -37,7 +37,7 @@ public class Block
 
     public void SetSpriteId(int spriteId)
     {
-        if (spriteId < BlockData.Instance.sprites[(int)type].Length && spriteId >= 0)
+        if (spriteId < BlockData.Instance.sprites[type].Length && spriteId >= 0)
         {
             this.spriteId = spriteId;
         }

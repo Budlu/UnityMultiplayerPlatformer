@@ -11,7 +11,7 @@ public class RenderedBlock : MonoBehaviour
     {
         this.block = block;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90 * block.GetRotation()));
-        spriteRenderer.sprite = BlockData.Instance.sprites[(int)block.GetBlockType()][block.GetSpriteId()];
+        spriteRenderer.sprite = BlockData.Instance.sprites[block.GetBlockType()][block.GetSpriteId()];
     }
 
     public Block GetBlock()

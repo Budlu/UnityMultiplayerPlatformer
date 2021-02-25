@@ -21,7 +21,7 @@ public class Inventory : MonoBehaviour
         {
             items[i] = new Block(BlockType.square, 0, 0);
         }
-        items[items.Length - 1] = new Block(BlockType.empty, 0, 0);
+        items[items.Length - 1] = new Block(BlockType.eraser, 0, 0);
 
         keys = new KeyCode[itemSlots];
 

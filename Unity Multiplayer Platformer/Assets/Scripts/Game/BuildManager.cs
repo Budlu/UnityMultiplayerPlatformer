@@ -8,7 +8,9 @@ public class BuildManager : MonoBehaviour
 
     [SerializeField] Transform worldHolder;
     [SerializeField] SpriteRenderer hoverSprite;
-    [SerializeField] float hoverAlpha = 0.5f;
+
+    Color emptyPlace = new Color(0f, 1f, 0f, 0.5f);
+    Color overwritePlace = new Color(1f, 0f, 0f, 0.5f);
 
     // Get size from somewhere
     int height = 40, width = 40;
@@ -92,23 +94,24 @@ public class BuildManager : MonoBehaviour
             hoverSprite.transform.position = new Vector3(xInt, yInt, hoverOffset);
 
             RenderedBlock renderedBlock = world[xInt, yInt];
-            if (renderedBlock.GetBlock().GetBlockType() == BlockType.empty)
+            if (erasing)
             {
-                hoverSprite.color = new Color(0, 1, 0, hoverAlpha);
+                hoverSprite.color = emptyPlace;
 
                 if (Input.GetKey(select1))
-                    Place(inv.GetSelectedBlock(), xInt, yInt);
-            }
-            else if (erasing)
-            {
-                hoverSprite.color = new Color(0, 1, 0, hoverAlpha);
-
-                if (Input.GetKey(select1))
-                    Place(inv.GetSelectedBlock(), xInt, yInt);
+                    Place(new Block(BlockType.empty, 0, 0), xInt, yInt);
             }
             else
             {
-                hoverSprite.color = new Color(1, 0, 0, hoverAlpha);
+                if (renderedBlock.GetBlock().GetBlockType() == BlockType.empty)
+                {
+                    hoverSprite.color = emptyPlace;
+
+                    if (Input.GetKey(select1))
+                        Place(inv.GetSelectedBlock(), xInt, yInt);
+                }
+                else
+                    hoverSprite.color = overwritePlace;
             }
         }
     }
@@ -131,6 +134,6 @@ public class BuildManager : MonoBehaviour
     public void UpdateHoverBlock(Block block)
     {
         hoverSprite.transform.rotation = Quaternion.Euler(0, 0, block.GetRotation() * 90);
-        hoverSprite.sprite = BlockData.Instance.sprites[(int)block.GetBlockType()][block.GetSpriteId()];
+        hoverSprite.sprite = BlockData.Instance.sprites[block.GetBlockType()][block.GetSpriteId()];
     }
 }

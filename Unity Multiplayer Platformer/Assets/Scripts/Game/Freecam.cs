@@ -7,6 +7,7 @@ public class Freecam : MonoBehaviour
     [SerializeField] float scrollSpeed = 15f, scrollThreshold = 10f, zoomSpeed = 15f;
     [SerializeField] float width = 40f, height = 40f;
     [SerializeField] float startSize = 5f, minSize = 5f, maxSize;
+    [SerializeField] float invWidth = 150f, canvasWidth = 1920f;
     float minX, maxX, minY, maxY;
 
     Camera cam;
@@ -25,6 +26,9 @@ public class Freecam : MonoBehaviour
         maxY = height - minY - 1f;
 
         maxSize = Mathf.Min(width / cam.aspect / 2, height / 2);
+
+        minX -= (invWidth / canvasWidth * cam.aspect * startSize * 2);
+        cam.transform.position = new Vector3(minX, cam.transform.position.y, cam.transform.position.z);
     }
 
     void Update()
@@ -44,8 +48,8 @@ public class Freecam : MonoBehaviour
         cam.orthographicSize = Mathf.Clamp(targetSize, minSize, maxSize);
 
         float size = cam.orthographicSize;
-        minX = size * cam.aspect - 0.5f;
-        maxX = width - minX - 1f;
+        minX = size * cam.aspect - 0.5f - (invWidth / canvasWidth * cam.aspect * size * 2);
+        maxX = width - (size * cam.aspect - 0.5f) - 1f;
         minY = size - 0.5f;
         maxY = height - minY - 1f;
 

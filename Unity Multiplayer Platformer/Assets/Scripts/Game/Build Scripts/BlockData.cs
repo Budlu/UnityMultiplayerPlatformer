@@ -18,6 +18,7 @@ public class BlockData : MonoBehaviour
     public Dictionary<BlockType, int> spriteCount;
     public Dictionary<BlockType, GameObject> prefabs = new Dictionary<BlockType, GameObject>();
     public Dictionary<BlockType, Sprite[]> sprites = new Dictionary<BlockType, Sprite[]>();
+    public Dictionary<BlockType, Sprite[]> itemSprites = new Dictionary<BlockType, Sprite[]>();
 
     void Awake()
     {
@@ -55,8 +56,11 @@ public class BlockData : MonoBehaviour
     {
         // UPDATE LATER
         Sprite[] empty = new Sprite[1];
+        Sprite[] emptyItem = new Sprite[1];
         empty[0] = Resources.Load<Sprite>("Sprites/Empty");
         sprites.Add(BlockType.empty, empty);
+        emptyItem[0] = Resources.Load<Sprite>("Items/Empty");
+        itemSprites.Add(BlockType.empty, emptyItem);
 
         Sprite[] eraser = new Sprite[1];
         eraser[0] = Resources.Load<Sprite>("Sprites/Eraser");
@@ -64,10 +68,13 @@ public class BlockData : MonoBehaviour
 
         int squareCount = spriteCount[BlockType.square];
         Sprite[] square = new Sprite[squareCount];
+        Sprite[] squareItems = new Sprite[squareCount];
         for (int i = 0; i < squareCount; i++)
         {
             square[i] = Resources.Load<Sprite>("Sprites/Square" + i);
+            squareItems[i] = Resources.Load<Sprite>("Items/Square" + i);
         }
         sprites.Add(BlockType.square, square);
+        itemSprites.Add(BlockType.square, square);
     }
 }

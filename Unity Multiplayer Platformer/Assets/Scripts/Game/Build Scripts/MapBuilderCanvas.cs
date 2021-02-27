@@ -26,7 +26,7 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public void UpdateSlot(int slot, Block block)
     {
-        items[slot].sprite = BlockData.Instance.sprites[block.GetBlockType()][block.GetSpriteId()];
+        items[slot].sprite = BlockData.Instance.itemSprites[block.GetBlockType()][block.GetSpriteId()];
         items[slot].rectTransform.rotation = Quaternion.Euler(0, 0, block.GetRotation() * 90);
     }
 }

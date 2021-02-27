@@ -74,15 +74,14 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void ChangeSlot(int slot)
+    public void ChangeSlot(int slot)
     {
         activeSlot = slot;
-
-        // Change to if later when doing UI highlighting
-        bm.SetErasing(slot == itemSlots - 1);
-
         Block newBlock = items[slot];
+
         bm.UpdateHoverBlock(newBlock);
+        bm.SetErasing(slot == itemSlots - 1);
+        canvas.SelectSlot(slot);
     }
 
     private void CheckRotate()

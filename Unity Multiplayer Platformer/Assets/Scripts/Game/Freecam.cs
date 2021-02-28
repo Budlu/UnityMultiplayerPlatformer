@@ -7,7 +7,10 @@ public class Freecam : MonoBehaviour
     [SerializeField] float scrollSpeed = 15f, scrollThreshold = 10f, zoomSpeed = 15f;
     [SerializeField] float width = 40f, height = 40f;
     [SerializeField] float startSize = 5f, minSize = 5f, maxSize;
-    [SerializeField] float invWidth = 150f, canvasWidth = 1920f;
+
+    // Assign invwidth and rightwidth to 0 when menus arent present
+    [SerializeField] float invWidth = 150f, rightWidth = 150f;
+    int canvasWidth = Screen.width;
     float minX, maxX, minY, maxY;
 
     Camera cam;
@@ -25,9 +28,16 @@ public class Freecam : MonoBehaviour
         minY = startSize - 0.5f;
         maxY = height - minY - 1f;
 
-        maxSize = Mathf.Min(width / cam.aspect / 2, height / 2);
+        float leftOffset = invWidth / canvasWidth * 2 * startSize * cam.aspect;
+        float rightOffset = rightWidth / canvasWidth * 2 * startSize * cam.aspect;
 
-        minX -= (invWidth / canvasWidth * cam.aspect * startSize * 2);
+        float maxXSize = Screen.height / (2 * (canvasWidth - Mathf.RoundToInt(invWidth) - Mathf.RoundToInt(rightWidth)) / width);
+        float maxYSize = height / 2;
+        maxSize = Mathf.Min(maxXSize, maxYSize);
+
+        minX -= leftOffset;
+        maxX += rightOffset;
+
         cam.transform.position = new Vector3(minX, cam.transform.position.y, cam.transform.position.z);
     }
 
@@ -48,8 +58,11 @@ public class Freecam : MonoBehaviour
         cam.orthographicSize = Mathf.Clamp(targetSize, minSize, maxSize);
 
         float size = cam.orthographicSize;
-        minX = size * cam.aspect - 0.5f - (invWidth / canvasWidth * cam.aspect * size * 2);
-        maxX = width - (size * cam.aspect - 0.5f) - 1f;
+        float leftOffset = invWidth / canvasWidth * 2 * size * cam.aspect;
+        float rightOffset = rightWidth / canvasWidth * 2 * size * cam.aspect;
+
+        minX = size * cam.aspect - 0.5f - leftOffset;
+        maxX = width - (size * cam.aspect - 0.5f) - 1f + rightOffset;
         minY = size - 0.5f;
         maxY = height - minY - 1f;
 

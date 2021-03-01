@@ -46,10 +46,12 @@ public class BlockData : MonoBehaviour
     {
         GameObject empty = Resources.Load<GameObject>("Prefabs/Empty");
         prefabs.Add(BlockType.empty, empty);
-        prefabs.Add(BlockType.eraser, empty);
 
         GameObject square = Resources.Load<GameObject>("Prefabs/Square");
         prefabs.Add(BlockType.square, square);
+
+        GameObject eraser = Resources.Load<GameObject>("Prefabs/Eraser");
+        prefabs.Add(BlockType.eraser, eraser);
     }
 
     private void LoadSprites()

@@ -7,15 +7,16 @@ public class BuildManager : MonoBehaviour
     public static BuildManager Instance;
 
     [SerializeField] Transform worldHolder;
-    [SerializeField] SpriteRenderer hoverSprite;
+    [SerializeField] RenderedBlock hoverBlock;
+    SpriteRenderer hoverSprite;
 
     Color emptyPlace = new Color(0f, 1f, 0f, 0.5f);
     Color overwritePlace = new Color(1f, 0f, 0f, 0.5f);
 
     // Get size from somewhere
     int height = 40, width = 40;
-    bool placing = true;
-    bool erasing = false;
+    int lastX = -1, lastY = -1;
+    bool placing = true, erasing = false, hovering = true;
     float hoverOffset;
 
     RenderedBlock[,] world;
@@ -44,7 +45,9 @@ public class BuildManager : MonoBehaviour
         inv = GetComponent<Inventory>();
         cam = FindObjectOfType<Camera>();
 
-        hoverOffset = hoverSprite.transform.position.z;
+        hoverSprite = hoverBlock.GetComponent<SpriteRenderer>();
+        hoverSprite.color = emptyPlace;
+        hoverOffset = hoverBlock.transform.position.z;
 
         UpdateSelectKey();
         InputManager.Instance.ControlsChanged += UpdateSelectKey;
@@ -75,15 +78,15 @@ public class BuildManager : MonoBehaviour
 
     void Update()
     {
+        MoveHover();
         CheckForPlacement();
     }
 
-    private void CheckForPlacement()
+    private void MoveHover()
     {
-        if (placing)
+        if (hovering)
         {
-            Vector2 placePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            placePos = new Vector2(placePos.x + 0.5f, placePos.y + 0.5f);
+            Vector2 placePos = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition) + new Vector2(0.5f, 0.5f);
 
             int xInt = Mathf.RoundToInt(Mathf.Floor(placePos.x));
             int yInt = Mathf.RoundToInt(Mathf.Floor(placePos.y));
@@ -91,27 +94,40 @@ public class BuildManager : MonoBehaviour
             if (yInt >= height || xInt >= width || yInt < 0 || xInt < 0)
                 return;
 
-            hoverSprite.transform.position = new Vector3(xInt, yInt, hoverOffset);
+            if (xInt == lastX && yInt == lastY)
+                return;
 
-            RenderedBlock renderedBlock = world[xInt, yInt];
+            lastX = xInt;
+            lastY = yInt;
+
+            hoverBlock.transform.position = new Vector3(xInt, yInt, hoverOffset);
+            UpdateHoverColor();
+        }
+    }
+
+    private void UpdateHoverColor()
+    {
+        if (hoverBlock.GetValidPosition(world, lastX, lastY) || erasing)
+            hoverSprite.color = emptyPlace;
+        else
+            hoverSprite.color = overwritePlace;
+    }
+
+    private void CheckForPlacement()
+    {
+        if (!placing)
+            return;
+
+        if (Input.GetKey(select1))
+        {
             if (erasing)
             {
-                hoverSprite.color = emptyPlace;
-
-                if (Input.GetKey(select1))
-                    Place(new Block(BlockType.empty, 0, 0), xInt, yInt);
+                Place(new Block(BlockType.empty, 0, 0), lastX, lastY);
             }
-            else
+            else if (hoverBlock.GetValidPosition(world, lastX, lastY))
             {
-                if (renderedBlock.GetBlock().GetBlockType() == BlockType.empty)
-                {
-                    hoverSprite.color = emptyPlace;
-
-                    if (Input.GetKey(select1))
-                        Place(inv.GetSelectedBlock(), xInt, yInt);
-                }
-                else
-                    hoverSprite.color = overwritePlace;
+                Place(inv.GetSelectedBlock(), lastX, lastY);
+                UpdateHoverColor();
             }
         }
     }
@@ -138,7 +154,15 @@ public class BuildManager : MonoBehaviour
 
     public void UpdateHoverBlock(Block block)
     {
-        hoverSprite.transform.rotation = Quaternion.Euler(0, 0, block.GetRotation() * 90);
-        hoverSprite.sprite = BlockData.Instance.sprites[block.GetBlockType()][block.GetSpriteId()];
+        Vector2 startPos = hoverBlock.transform.position;
+
+        Destroy(hoverBlock.gameObject);
+
+        hoverBlock = Instantiate(BlockData.Instance.prefabs[block.GetBlockType()], transform).GetComponent<RenderedBlock>();
+        hoverBlock.transform.position = startPos;
+        hoverBlock.transform.rotation = Quaternion.Euler(0, 0, block.GetRotation() * 90);
+
+        hoverSprite = hoverBlock.GetComponent<SpriteRenderer>();
+        UpdateHoverColor();
     }
 }

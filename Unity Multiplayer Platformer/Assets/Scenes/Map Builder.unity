@@ -211,6 +211,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Build Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 3955720069401708131, guid: d301385a9c1f0bd4e981c741042be1ee, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7466570790437885715, guid: d301385a9c1f0bd4e981c741042be1ee, type: 3}
       propertyPath: m_RootOrder
       value: 4

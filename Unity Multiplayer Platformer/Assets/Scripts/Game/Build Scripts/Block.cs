@@ -43,6 +43,66 @@ public class Block
         }
     }
 
+    public virtual void Erase(Block[,] world, int x, int y)
+    {
+        foreach (Vector2 offset in BlockData.Instance.blockShapes[type])
+        {
+            Vector2 newOffset = GameManager.Instance.RotateVector(offset, rotation);
+
+            int blockX = x + Mathf.RoundToInt(newOffset.x);
+            int blockY = y + Mathf.RoundToInt(newOffset.y);
+
+            world[blockX, blockY] = new Block(BlockType.empty, 0, 0);
+        }
+
+        world[x, y] = new Block(BlockType.empty, 0, 0);
+    }
+
+    public void PlaceLinkBlocks(Block[,] world, int x, int y)
+    {
+        foreach (Vector2 offset in BlockData.Instance.blockShapes[type])
+        {
+            Vector2 newOffset = GameManager.Instance.RotateVector(offset, rotation);
+
+            int blockX = x + Mathf.RoundToInt(newOffset.x);
+            int blockY = y + Mathf.RoundToInt(newOffset.y);
+
+            world[blockX, blockY] = new LinkBlock(type, rotation, spriteId, x, y);
+        }
+    }
+
+    public bool GetValidPosition(Block[,] world, int x, int y)
+    {
+        if (x < 0 || y < 0)
+            return false;
+
+        if (world[x, y].GetBlockType() != BlockType.empty)
+            return false;
+
+        // Might be wrong look here later
+        int width = world.GetLength(0);
+        int height = world.GetLength(1);
+
+        foreach (Vector2 offset in BlockData.Instance.blockShapes[type])
+        {
+            Vector2 newOffset = GameManager.Instance.RotateVector(offset, rotation);
+
+            int blockX = x + Mathf.RoundToInt(newOffset.x);
+            int blockY = y + Mathf.RoundToInt(newOffset.y);
+
+            if (blockX < 0 || blockX > width)
+                return false;
+
+            if (blockY < 0 || blockY > height)
+                return false;
+
+            if (world[blockX, blockY].GetBlockType() != BlockType.empty)
+                return false;
+        }
+
+        return true;
+    }
+
     public BlockType GetBlockType()
     {
         return type;

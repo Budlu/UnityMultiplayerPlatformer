@@ -16,6 +16,7 @@ public class BlockData : MonoBehaviour
     public static BlockData Instance;
 
     public Dictionary<BlockType, int> spriteCount;
+    public Dictionary<BlockType, Vector2[]> blockShapes;
     public Dictionary<BlockType, GameObject> prefabs = new Dictionary<BlockType, GameObject>();
     public Dictionary<BlockType, Sprite[]> sprites = new Dictionary<BlockType, Sprite[]>();
     public Dictionary<BlockType, Sprite[]> itemSprites = new Dictionary<BlockType, Sprite[]>();
@@ -27,6 +28,7 @@ public class BlockData : MonoBehaviour
             Instance = this;
 
             InitializeSpriteCount();
+            InitializeBlockShapes();
             LoadPrefabs();
             LoadSprites();
         }
@@ -39,6 +41,16 @@ public class BlockData : MonoBehaviour
             { BlockType.empty, 1 },
             { BlockType.square, 4 },
             { BlockType.eraser, 1 }
+        };
+    }
+
+    private void InitializeBlockShapes()
+    {
+        blockShapes = new Dictionary<BlockType, Vector2[]>
+        {
+            { BlockType.empty, new Vector2[0] },
+            { BlockType.square, new Vector2[0] },
+            { BlockType.eraser, new Vector2[0] }
         };
     }
 

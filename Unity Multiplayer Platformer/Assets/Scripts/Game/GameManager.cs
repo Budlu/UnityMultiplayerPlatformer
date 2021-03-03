@@ -19,4 +19,13 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
+
+    public Vector2 RotateVector(Vector2 vector, int rotation)
+    {
+        vector.x += Mathf.Cos(rotation * Mathf.Deg2Rad) * vector.x;
+        vector.y += Mathf.Sin(rotation * Mathf.Deg2Rad) * vector.y;
+        vector.Normalize();
+
+        return vector;
+    }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class LinkBlock : Block
 {
@@ -11,9 +12,9 @@ public class LinkBlock : Block
         this.parentY = parentY;
     }
 
-    public override void Erase(Block[,] world, int x, int y)
+    public override void Erase(Block[,] world, GameObject[,] view, int x, int y)
     {
-        world[parentX, parentY].Erase(world, parentX, parentY);
+        world[parentX, parentY].Erase(world, view, parentX, parentY);
     }
 
     public int GetParentX()

@@ -43,11 +43,11 @@ public class Block
         }
     }
 
-    public virtual void Erase(Block[,] world, int x, int y)
+    public virtual void Erase(Block[,] world, GameObject[,] view, int x, int y)
     {
         foreach (Vector2 offset in BlockData.Instance.blockShapes[type])
         {
-            Vector2 newOffset = GameManager.Instance.RotateVector(offset, rotation);
+            Vector2 newOffset = GameManager.Instance.RotateVector(offset, rotation * 90);
 
             int blockX = x + Mathf.RoundToInt(newOffset.x);
             int blockY = y + Mathf.RoundToInt(newOffset.y);
@@ -56,13 +56,14 @@ public class Block
         }
 
         world[x, y] = new Block(BlockType.empty, 0, 0);
+        GameObject.Destroy(view[x, y]);
     }
 
     public void PlaceLinkBlocks(Block[,] world, int x, int y)
     {
         foreach (Vector2 offset in BlockData.Instance.blockShapes[type])
         {
-            Vector2 newOffset = GameManager.Instance.RotateVector(offset, rotation);
+            Vector2 newOffset = GameManager.Instance.RotateVector(offset, rotation * 90);
 
             int blockX = x + Mathf.RoundToInt(newOffset.x);
             int blockY = y + Mathf.RoundToInt(newOffset.y);
@@ -85,15 +86,15 @@ public class Block
 
         foreach (Vector2 offset in BlockData.Instance.blockShapes[type])
         {
-            Vector2 newOffset = GameManager.Instance.RotateVector(offset, rotation);
+            Vector2 newOffset = GameManager.Instance.RotateVector(offset, rotation * 90);
 
             int blockX = x + Mathf.RoundToInt(newOffset.x);
             int blockY = y + Mathf.RoundToInt(newOffset.y);
 
-            if (blockX < 0 || blockX > width)
+            if (blockX < 0 || blockX >= width)
                 return false;
 
-            if (blockY < 0 || blockY > height)
+            if (blockY < 0 || blockY >= height)
                 return false;
 
             if (world[blockX, blockY].GetBlockType() != BlockType.empty)

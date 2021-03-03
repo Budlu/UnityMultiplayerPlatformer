@@ -134,7 +134,7 @@ public class BuildManager : MonoBehaviour
     private void Erase()
     {
         Block block = blockData[lastX, lastY];
-        block.Erase(blockData, lastX, lastY);
+        block.Erase(blockData, blockView, lastX, lastY);
 
         GameObject prefab = blockView[lastX, lastY];
         if (prefab != null)

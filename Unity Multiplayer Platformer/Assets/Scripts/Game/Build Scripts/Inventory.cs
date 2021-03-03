@@ -23,6 +23,7 @@ public class Inventory : MonoBehaviour
         {
             SetSlot(i, new Block(BlockType.square, 0, 0));
         }
+        SetSlot(8, new Block(BlockType.spike, 0, 0));
         items[items.Length - 1] = new Block(BlockType.eraser, 0, 0);
 
         keys = new KeyCode[itemSlots];

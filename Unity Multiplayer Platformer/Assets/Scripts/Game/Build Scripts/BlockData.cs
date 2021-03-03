@@ -6,6 +6,7 @@ public enum BlockType
 {
     empty,
     square,
+    spike,
     slope,
     oneDirectional,
     eraser
@@ -40,16 +41,20 @@ public class BlockData : MonoBehaviour
         {
             { BlockType.empty, 1 },
             { BlockType.square, 4 },
+            { BlockType.spike, 1 },
             { BlockType.eraser, 1 }
         };
     }
 
     private void InitializeBlockShapes()
     {
+        Vector2[] spike = new Vector2[] { new Vector2(-1, 0), new Vector2(-1, 1), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
+
         blockShapes = new Dictionary<BlockType, Vector2[]>
         {
             { BlockType.empty, new Vector2[0] },
             { BlockType.square, new Vector2[0] },
+            { BlockType.spike, spike },
             { BlockType.eraser, new Vector2[0] }
         };
     }
@@ -61,6 +66,9 @@ public class BlockData : MonoBehaviour
 
         GameObject square = Resources.Load<GameObject>("Prefabs/Square");
         prefabs.Add(BlockType.square, square);
+
+        GameObject spike = Resources.Load<GameObject>("Prefabs/Spike");
+        prefabs.Add(BlockType.spike, spike);
 
         GameObject eraser = Resources.Load<GameObject>("Prefabs/Eraser");
         prefabs.Add(BlockType.eraser, eraser);
@@ -75,6 +83,14 @@ public class BlockData : MonoBehaviour
         sprites.Add(BlockType.empty, empty);
         emptyItem[0] = Resources.Load<Sprite>("Items/Empty");
         itemSprites.Add(BlockType.empty, emptyItem);
+
+        Sprite[] spike = new Sprite[1];
+        Sprite[] spikeItem = new Sprite[1];
+        spike[0] = Resources.Load<Sprite>("Sprites/Spike");
+        sprites.Add(BlockType.spike, spike);
+        spikeItem[0] = Resources.Load<Sprite>("Items/Spike");
+        itemSprites.Add(BlockType.spike, spikeItem);
+
 
         Sprite[] eraser = new Sprite[1];
         eraser[0] = Resources.Load<Sprite>("Sprites/Eraser");

@@ -20,12 +20,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Not rotating vectors properly, needs fix
     public Vector2 RotateVector(Vector2 vector, int rotation)
     {
-        vector.x += Mathf.Cos(rotation * Mathf.Deg2Rad) * vector.x;
-        vector.y += Mathf.Sin(rotation * Mathf.Deg2Rad) * vector.y;
-        vector.Normalize();
+        Vector2 retVal = Vector2.zero;
+        float radians = rotation * Mathf.PI / 180f;
 
-        return vector;
+        retVal.x = vector.x * Mathf.Cos(radians) + vector.y * -Mathf.Sin(radians);
+        retVal.y = vector.x * Mathf.Sin(radians) + vector.y * Mathf.Cos(radians);
+
+        return retVal;
     }
 }

@@ -22,8 +22,8 @@ public class GridGenerator : MonoBehaviour
         for (int i = 0; i <= height; i++)
         {
             GameObject line = Instantiate(gridLine, transform);
-            line.transform.localScale = new Vector3(width, lineWidth, 0);
-            line.transform.position = new Vector3(width / 2 - 0.5f, i - 0.5f, 0);
+            line.transform.localScale = new Vector3(width, lineWidth, 0f);
+            line.transform.localPosition = new Vector3(width / 2 - 0.5f, i - 0.5f, 0f);
 
             horizontalLines.Add(line);
         }   
@@ -31,8 +31,8 @@ public class GridGenerator : MonoBehaviour
         for (int k = 0; k <= width; k++)
         {
             GameObject line = Instantiate(gridLine, transform);
-            line.transform.localScale = new Vector3(lineWidth, height, 0);
-            line.transform.position = new Vector3(k - 0.5f, height / 2 - 0.5f, 0);
+            line.transform.localScale = new Vector3(lineWidth, height, 0f);
+            line.transform.localPosition = new Vector3(k - 0.5f, height / 2 - 0.5f, 0f);
 
             verticalLines.Add(line);
         }
@@ -42,12 +42,12 @@ public class GridGenerator : MonoBehaviour
     {
         foreach (GameObject line in horizontalLines)
         {
-            line.transform.localScale = new Vector3(width, lineWidth * multiplier, 0);
+            line.transform.localScale = new Vector3(width, lineWidth * multiplier, 0f);
         }
 
         foreach (GameObject line in verticalLines)
         {
-            line.transform.localScale = new Vector3(lineWidth * multiplier, height, 0);
+            line.transform.localScale = new Vector3(lineWidth * multiplier, height, 0f);
         }
     }
 

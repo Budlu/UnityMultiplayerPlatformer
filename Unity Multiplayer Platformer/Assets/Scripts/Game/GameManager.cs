@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Not rotating vectors properly, needs fix
     public Vector2 RotateVector(Vector2 vector, int rotation)
     {
         Vector2 retVal = Vector2.zero;

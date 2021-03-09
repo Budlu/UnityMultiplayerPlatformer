@@ -9,6 +9,7 @@ public class BuildManager : MonoBehaviour
     [SerializeField] Transform worldHolder;
     GameObject hoverBlock;
     SpriteRenderer hoverSprite;
+    SpriteSelection spriteSelection;
     Block selected = new Block(BlockType.empty, 0, 0);
 
     Color emptyPlace = new Color(0f, 1f, 0f, 0.5f);
@@ -17,7 +18,7 @@ public class BuildManager : MonoBehaviour
     // Get size from somewhere
     int height = 40, width = 40;
     int lastX = -1, lastY = -1;
-    [SerializeField] bool placing = true, erasing = false, hovering = true;
+    [SerializeField] bool placing = true, erasing = false, hovering = true, selecting = false;
     float hoverOffset = -1f;
 
     Block[,] blockData;
@@ -46,6 +47,8 @@ public class BuildManager : MonoBehaviour
         InitializeWorld();
         inv = GetComponent<Inventory>();
         cam = FindObjectOfType<Camera>();
+        spriteSelection = FindObjectOfType<SpriteSelection>();
+        spriteSelection.gameObject.SetActive(false);
 
         hoverBlock = Instantiate(BlockData.Instance.prefabs[BlockType.empty], transform);
         hoverSprite = hoverBlock.GetComponent<SpriteRenderer>();
@@ -123,7 +126,7 @@ public class BuildManager : MonoBehaviour
             {
                 Erase();
             }
-            else if (selected.GetValidPosition(blockData, lastX, lastY))
+            else if (placing && selected.GetValidPosition(blockData, lastX, lastY))
             {
                 Place(selected, lastX, lastY);
                 UpdateHoverColor();
@@ -183,5 +186,46 @@ public class BuildManager : MonoBehaviour
 
         selected = block;
         UpdateHoverColor();
+    }
+
+    public void TryChangeSprite(Block block)
+    {
+        if (!placing || erasing || selecting || spriteSelection.gameObject.activeSelf)
+            return;
+
+        BlockType type = block.GetBlockType();
+        int count = BlockData.Instance.spriteCount[type];
+
+        if (count < 2)
+            return;
+
+        placing = false;
+        hovering = false;
+        hoverBlock.SetActive(false);
+
+        spriteSelection.ShowSprites(type, Input.mousePosition);
+    }
+
+    public void ResumeState()
+    {
+        if (!spriteSelection.gameObject.activeSelf)
+            StartCoroutine(WaitForRelease());
+    }
+
+    IEnumerator WaitForRelease()
+    {
+        while (true)
+        {
+            if (!Input.GetKey(select1))
+            {
+                placing = true;
+                hovering = true;
+                hoverBlock.SetActive(true);
+
+                break;
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
     }
 }

@@ -12,6 +12,7 @@ public class Inventory : MonoBehaviour
     Block[] items;
     KeyCode[] keys;
     KeyCode rotate;
+    KeyCode changeSprite;
 
     void Start()
     {
@@ -34,7 +35,12 @@ public class Inventory : MonoBehaviour
         ChangeSlot(0);
     }
 
-    private void SetSlot(int slot, Block block)
+    public int GetActiveSlot()
+    {
+        return activeSlot;
+    }
+
+    public void SetSlot(int slot, Block block)
     {
         items[slot] = block;
         canvas.UpdateSlot(slot, block);
@@ -56,12 +62,14 @@ public class Inventory : MonoBehaviour
         keys[9] = map[Inputs.slot10];
 
         rotate = map[Inputs.rotate];
+        changeSprite = map[Inputs.sprites];
     }
 
     void Update()
     {
         CheckKeyPress();
         CheckRotate();
+        CheckSprites();
     }
 
     private void CheckKeyPress()
@@ -94,6 +102,14 @@ public class Inventory : MonoBehaviour
             block.Rotate();
             SetSlot(activeSlot, block);
             bm.UpdateHoverBlock(block);
+        }
+    }
+
+    private void CheckSprites()
+    {
+        if (Input.GetKeyDown(changeSprite))
+        {
+            bm.TryChangeSprite(GetSelectedBlock());
         }
     }
 

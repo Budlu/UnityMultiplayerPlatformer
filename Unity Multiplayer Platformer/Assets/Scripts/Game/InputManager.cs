@@ -18,7 +18,8 @@ public enum Inputs
     slot10,
     select1,
     select2,
-    rotate
+    rotate,
+    sprites
 }
 
 public class InputManager : MonoBehaviour
@@ -52,7 +53,8 @@ public class InputManager : MonoBehaviour
             { Inputs.slot10, KeyCode.E },
             { Inputs.select1, KeyCode.Mouse0 },
             { Inputs.select2, KeyCode.Mouse1 },
-            { Inputs.rotate, KeyCode.R }
+            { Inputs.rotate, KeyCode.R },
+            { Inputs.sprites, KeyCode.Q }
         };
     }
 

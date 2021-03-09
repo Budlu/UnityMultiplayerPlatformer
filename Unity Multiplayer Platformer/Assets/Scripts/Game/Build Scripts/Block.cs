@@ -74,6 +74,7 @@ public class Block
 
     public bool GetValidPosition(Block[,] world, int x, int y)
     {
+        // check outside positive world bounds
         if (x < 0 || y < 0)
             return false;
 

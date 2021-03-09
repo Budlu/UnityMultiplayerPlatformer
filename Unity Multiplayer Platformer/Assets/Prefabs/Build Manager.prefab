@@ -76,6 +76,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldHolder: {fileID: 8451977873039402119}
+  spriteSelection: {fileID: 0}
+  placing: 1
+  erasing: 0
+  hovering: 1
+  selecting: 0
 --- !u!114 &700401449114062400
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -26,7 +26,7 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        bm.SetPlacing(true);
+        bm.ResumeState();
     }
 
     public void UpdateSlot(int slot, Block block)

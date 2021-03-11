@@ -5,12 +5,14 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     [SerializeField] int activeSlot = 0;
-    int itemSlots = 10;
+    int itemSlots = 9;
 
     BuildManager bm;
     MapBuilderCanvas canvas;
     Block[] items;
+
     KeyCode[] keys;
+    KeyCode erase;
     KeyCode rotate;
     KeyCode changeSprite;
 
@@ -25,7 +27,6 @@ public class Inventory : MonoBehaviour
             SetSlot(i, new Block(BlockType.square, 0, 0));
         }
         SetSlot(8, new Block(BlockType.spike, 0, 0));
-        items[items.Length - 1] = new Block(BlockType.eraser, 0, 0);
 
         keys = new KeyCode[itemSlots];
 
@@ -46,6 +47,11 @@ public class Inventory : MonoBehaviour
         canvas.UpdateSlot(slot, block);
     }
 
+    public void SetHighlightVisibility(bool visibility)
+    {
+        canvas.SetHighlightVisibility(visibility);
+    }
+
     private void UpdateKeys()
     {
         Dictionary<Inputs, KeyCode> map = InputManager.Instance.map;
@@ -59,8 +65,8 @@ public class Inventory : MonoBehaviour
         keys[6] = map[Inputs.slot7];
         keys[7] = map[Inputs.slot8];
         keys[8] = map[Inputs.slot9];
-        keys[9] = map[Inputs.slot10];
 
+        erase = map[Inputs.eraser];
         rotate = map[Inputs.rotate];
         changeSprite = map[Inputs.sprites];
     }
@@ -68,8 +74,17 @@ public class Inventory : MonoBehaviour
     void Update()
     {
         CheckKeyPress();
+        CheckErase();
         CheckRotate();
         CheckSprites();
+    }
+
+    private void CheckErase()
+    {
+        if (Input.GetKeyDown(erase))
+        {
+            bm.ChangeMode(new Erasing());
+        }
     }
 
     private void CheckKeyPress()
@@ -89,20 +104,15 @@ public class Inventory : MonoBehaviour
         Block newBlock = items[slot];
 
         bm.UpdateHoverBlock(newBlock);
-        bm.SetErasing(slot == itemSlots - 1);
         canvas.SelectSlot(slot);
+
+        bm.ChangeMode(new Placing());
     }
 
     private void CheckRotate()
     {
-        if (Input.GetKeyDown(rotate) && activeSlot != itemSlots-1)
-        {
-            Block block = items[activeSlot];
-
-            block.Rotate();
-            SetSlot(activeSlot, block);
-            bm.UpdateHoverBlock(block);
-        }
+        if (Input.GetKeyDown(rotate))
+            bm.TryRotate();
     }
 
     private void CheckSprites()

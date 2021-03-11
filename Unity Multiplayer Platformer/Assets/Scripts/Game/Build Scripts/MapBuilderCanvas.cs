@@ -11,7 +11,6 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     BuildManager bm;
     Inventory inv;
-    int eraserSlot = 9;
 
     void Start()
     {
@@ -21,12 +20,12 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        bm.SetPlacing(false);
+        //bm.SetPlacing(false);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        bm.ResumeState();
+        //bm.ResumeState();
     }
 
     public void UpdateSlot(int slot, Block block)
@@ -37,9 +36,11 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public void SelectSlot(int slot)
     {
-        if (slot == eraserSlot)
-            highlight.rectTransform.position = new Vector2(-100f, -100f);
-        else
-            highlight.rectTransform.position = items[slot].rectTransform.position;
+        highlight.rectTransform.position = items[slot].rectTransform.position;
+    }
+
+    public void SetHighlightVisibility(bool visibility)
+    {
+        highlight.gameObject.SetActive(visibility);
     }
 }

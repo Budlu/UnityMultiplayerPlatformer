@@ -19,44 +19,10 @@ public class SpriteSelection : MonoBehaviour
     Vector3 center;
     float rotation;
 
-    KeyCode select1;
-    KeyCode select2;
-
     void Start()
     {
         bm = FindObjectOfType<BuildManager>();
         inventory = FindObjectOfType<Inventory>();
-
-        SetControls();
-        InputManager.Instance.ControlsChanged += SetControls;
-    }
-        
-    private void SetControls()
-    {
-        select1 = InputManager.Instance.map[Inputs.select1];
-        select2 = InputManager.Instance.map[Inputs.select2];
-    }
-
-    void Update()
-    {
-        CheckSelects();
-    }
-
-    private void CheckSelects()
-    {
-        if (Input.GetKeyDown(select1))
-        {
-            Block currentBlock = inventory.GetSelectedBlock();
-            currentBlock.SetSpriteId(highlightBlock);
-            inventory.SetSlot(inventory.GetActiveSlot(), currentBlock);
-
-            DisableSprites();
-        }
-
-        if (Input.GetKeyDown(select2))
-        {
-            DisableSprites();
-        }
     }
 
     private void SetPosition(Vector3 position)
@@ -138,7 +104,10 @@ public class SpriteSelection : MonoBehaviour
         StopCoroutine(highlightRoutine);
         highlightBlock = -1;
         gameObject.SetActive(false);
+    }
 
-        bm.ResumeState();
+    public int GetHightlightId()
+    {
+        return highlightBlock;
     }
 }

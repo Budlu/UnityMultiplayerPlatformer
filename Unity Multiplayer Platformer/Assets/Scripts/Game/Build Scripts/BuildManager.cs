@@ -5,6 +5,7 @@ using UnityEngine;
 public class BuildManager : MonoBehaviour
 {
     public static BuildManager Instance;
+    private BuildData buildData = new BuildData();
 
     [SerializeField] Transform worldHolder;
     GameObject hoverBlock;
@@ -13,12 +14,9 @@ public class BuildManager : MonoBehaviour
     Block selected = new Block(BlockType.empty, 0, 0);
 
     Color emptyPlace = new Color(0f, 1f, 0f, 0.5f);
-    Color overwritePlace = new Color(1f, 0f, 0f, 0.5f);
 
     // Get size from somewhere
     int height = 40, width = 40;
-    int lastX = -1, lastY = -1;
-    [SerializeField] bool placing = true, erasing = false, hovering = true, selecting = false;
     float hoverOffset = -1f;
 
     Block[,] blockData;
@@ -27,6 +25,7 @@ public class BuildManager : MonoBehaviour
     Camera cam;
 
     KeyCode select1;
+    KeyCode select2;
 
     void Awake()
     {
@@ -45,8 +44,10 @@ public class BuildManager : MonoBehaviour
     void Start()
     {
         InitializeWorld();
+
         inv = GetComponent<Inventory>();
         cam = FindObjectOfType<Camera>();
+
         spriteSelection = FindObjectOfType<SpriteSelection>();
         spriteSelection.gameObject.SetActive(false);
 
@@ -55,8 +56,17 @@ public class BuildManager : MonoBehaviour
         hoverSprite.color = emptyPlace;
         hoverBlock.transform.position = new Vector3(hoverBlock.transform.position.x, hoverBlock.transform.position.y, hoverOffset);
 
-        UpdateSelectKey();
-        InputManager.Instance.ControlsChanged += UpdateSelectKey;
+        UpdateSelectKeys();
+        InputManager.Instance.ControlsChanged += UpdateSelectKeys;
+
+        buildData.SetMapState(blockData, blockView);
+        buildData.SetDimensions(height, width);
+        buildData.SetObjectData(this, worldHolder, hoverBlock, hoverSprite, spriteSelection, selected, inv, cam);
+    }
+
+    public void ChangeMode(IBuildMode mode)
+    {
+        buildData.SetBuildMode(mode);
     }
 
     private void InitializeWorld()
@@ -73,155 +83,41 @@ public class BuildManager : MonoBehaviour
         blockView = new GameObject[height, width];
     }
 
-    private void UpdateSelectKey()
+    private void UpdateSelectKeys()
     {
         select1 = InputManager.Instance.map[Inputs.select1];
+        select2 = InputManager.Instance.map[Inputs.select2];
+
+        buildData.SetSelectKeys(select1, select2);
+    }
+
+    public void TryRotate()
+    {
+        buildData.TryRotate();
     }
 
     void Update()
     {
-        MoveHover();
-        CheckForPlacement();
-    }
-
-    private void MoveHover()
-    {
-        if (hovering)
-        {
-            Vector2 placePos = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition) + new Vector2(0.5f, 0.5f);
-
-            int xInt = Mathf.RoundToInt(Mathf.Floor(placePos.x));
-            int yInt = Mathf.RoundToInt(Mathf.Floor(placePos.y));
-
-            if (yInt >= height || xInt >= width || yInt < 0 || xInt < 0)
-                return;
-
-            if (xInt == lastX && yInt == lastY)
-                return;
-
-            lastX = xInt;
-            lastY = yInt;
-
-            hoverBlock.transform.position = new Vector3(xInt, yInt, hoverOffset);
-            UpdateHoverColor();
-        }
-    }
-
-    private void UpdateHoverColor()
-    {
-        if (erasing || selected.GetValidPosition(blockData, lastX, lastY))
-            hoverSprite.color = emptyPlace;
-        else
-            hoverSprite.color = overwritePlace;
-    }
-
-    private void CheckForPlacement()
-    {
-        if (!placing)
-            return;
-
-        if (Input.GetKey(select1))
-        {
-            if (erasing)
-            {
-                Erase();
-            }
-            else if (placing && selected.GetValidPosition(blockData, lastX, lastY))
-            {
-                Place(selected, lastX, lastY);
-                UpdateHoverColor();
-            }
-        }
-    }
-
-    private void Erase()
-    {
-        Block block = blockData[lastX, lastY];
-        block.Erase(blockData, blockView, lastX, lastY);
-
-        GameObject prefab = blockView[lastX, lastY];
-        if (prefab != null)
-            Destroy(blockView[lastX, lastY].gameObject);
-    }
-
-    private void Place(Block block, int xPos, int yPos)
-    {
-        if (blockView[xPos, yPos] != null)
-            Destroy(blockView[xPos, yPos].gameObject);
-
-        GameObject newBlock = BlockData.Instance.prefabs[block.GetBlockType()];
-
-        blockView[xPos, yPos] = Instantiate(newBlock, worldHolder);
-        blockView[xPos, yPos].transform.position = new Vector2(xPos, yPos);
-        blockView[xPos, yPos].transform.rotation = Quaternion.Euler(0, 0, block.GetRotation() * 90);
-        blockView[xPos, yPos].GetComponent<SpriteRenderer>().sprite = BlockData.Instance.sprites[block.GetBlockType()][block.GetSpriteId()];
-
-        blockData[lastX, lastY] = new Block(block.GetBlockType(), block.GetRotation(), block.GetSpriteId());
-        blockData[lastX, lastY].PlaceLinkBlocks(blockData, lastX, lastY);
-    }
-
-    public void SetPlacing(bool placing)
-    {
-        this.placing = placing;
-    }
-
-    public void SetErasing(bool erasing)
-    {
-        this.erasing = erasing;
-        UpdateHoverColor();
+        buildData.ModeUpdate();
     }
 
     public void UpdateHoverBlock(Block block)
     {
-        Vector3 startPos = hoverBlock.transform.position;
-
-        Destroy(hoverBlock.gameObject);
-
-        hoverBlock = Instantiate(BlockData.Instance.prefabs[block.GetBlockType()], transform);
-        hoverBlock.transform.position = startPos;
-        hoverBlock.transform.rotation = Quaternion.Euler(0, 0, block.GetRotation() * 90);
-
-        hoverSprite = hoverBlock.GetComponent<SpriteRenderer>();
-        hoverSprite.sprite = BlockData.Instance.sprites[block.GetBlockType()][block.GetSpriteId()];
-
-        selected = block;
-        UpdateHoverColor();
+        buildData.UpdateHoverBlock(block);
     }
 
     public void TryChangeSprite(Block block)
     {
-        if (!placing || erasing || selecting || spriteSelection.gameObject.activeSelf)
-            return;
-
-        BlockType type = block.GetBlockType();
-        int count = BlockData.Instance.spriteCount[type];
-
-        if (count < 2)
-            return;
-
-        placing = false;
-        hovering = false;
-        hoverBlock.SetActive(false);
-
-        spriteSelection.ShowSprites(type, Input.mousePosition);
+        buildData.TryChangeSprite(block);
     }
 
-    public void ResumeState()
-    {
-        if (!spriteSelection.gameObject.activeSelf)
-            StartCoroutine(WaitForRelease());
-    }
-
-    IEnumerator WaitForRelease()
+    public IEnumerator ChangeModeOnRelease(KeyCode key, IBuildMode mode)
     {
         while (true)
         {
-            if (!Input.GetKey(select1))
+            if (!Input.GetKey(key))
             {
-                placing = true;
-                hovering = true;
-                hoverBlock.SetActive(true);
-
+                ChangeMode(mode);
                 break;
             }
 

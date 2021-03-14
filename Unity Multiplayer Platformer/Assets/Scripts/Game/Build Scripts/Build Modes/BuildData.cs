@@ -61,6 +61,25 @@ public class BuildData
         BuildData.mode.ChangeMode(mode);
     }
 
+    public void SetLastMode(IBuildMode mode)
+    {
+        lastMode = mode;
+    }
+
+    public void AssignBuildMode(IBuildMode mode)
+    {
+        BuildData.mode = mode;
+        mode.Begin();
+    }
+
+    public void ChangeToLastMode()
+    {
+        mode.End();
+
+        mode = lastMode;
+        mode.Begin();
+    }
+
     public void ModeUpdate()
     {
         MouseMovement();
@@ -103,5 +122,15 @@ public class BuildData
     public void TryChangeSprite(Block block)
     {
         mode.ChangeMode(new SpriteSelecting(block));
+    }
+
+    public IBuildMode GetActiveBuildMode()
+    {
+        return mode;
+    }
+
+    public void ForceEnd()
+    {
+        mode.End();
     }
 }

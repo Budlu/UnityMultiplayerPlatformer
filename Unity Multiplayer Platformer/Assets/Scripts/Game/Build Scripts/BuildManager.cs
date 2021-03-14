@@ -23,6 +23,7 @@ public class BuildManager : MonoBehaviour
     GameObject[,] blockView;
     Inventory inv;
     Camera cam;
+    MapBuilderCanvas canvas;
 
     KeyCode select1;
     KeyCode select2;
@@ -47,6 +48,7 @@ public class BuildManager : MonoBehaviour
 
         inv = GetComponent<Inventory>();
         cam = FindObjectOfType<Camera>();
+        canvas = FindObjectOfType<MapBuilderCanvas>();
 
         spriteSelection = FindObjectOfType<SpriteSelection>();
         spriteSelection.gameObject.SetActive(false);
@@ -67,6 +69,11 @@ public class BuildManager : MonoBehaviour
     public void ChangeMode(IBuildMode mode)
     {
         buildData.SetBuildMode(mode);
+    }
+
+    public void ChangeToLastMode()
+    {
+        buildData.ChangeToLastMode();
     }
 
     private void InitializeWorld()
@@ -111,17 +118,35 @@ public class BuildManager : MonoBehaviour
         buildData.TryChangeSprite(block);
     }
 
-    public IEnumerator ChangeModeOnRelease(KeyCode key, IBuildMode mode)
+    public IEnumerator ChangeModeOnRelease(KeyCode key)
     {
         while (true)
         {
             if (!Input.GetKey(key))
             {
-                ChangeMode(mode);
+                buildData.ForceEnd();
+
+                yield return new WaitForEndOfFrame();
+                
+                if (canvas.GetPointerIn())
+                {
+                    buildData.AssignBuildMode(new Interacting());
+                    buildData.SetLastMode(new Placing());
+                }
+                else
+                {
+                    buildData.SetBuildMode(new Placing());
+                }
+
                 break;
             }
 
             yield return new WaitForEndOfFrame();
         }
+    }
+
+    public IBuildMode GetActiveBuildMode()
+    {
+        return buildData.GetActiveBuildMode();
     }
 }

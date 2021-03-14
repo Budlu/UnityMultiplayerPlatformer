@@ -12,7 +12,7 @@ public class Placing : BuildData, IBuildMode
     public void Begin()
     {
         hoverBlock.SetActive(true);
-        inv.SetHighlightVisibility(true);
+        inv.HideHighlight(false);
 
         MoveHover();
         ChangeHoverBlock(inv.GetSelectedBlock());

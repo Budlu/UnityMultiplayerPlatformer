@@ -27,7 +27,9 @@ public class SpriteSelecting : BuildData, IBuildMode
 
     public void ChangeMode(IBuildMode mode)
     {
-        // Might need reassignment of last mode here
+        if (mode is Interacting)
+            return;
+
         End();
 
         BuildData.mode = mode;
@@ -36,6 +38,8 @@ public class SpriteSelecting : BuildData, IBuildMode
 
     public void End()
     {
+        hoverBlock.SetActive(false);
+
         spriteSelection.DisableSprites();
     }
 
@@ -49,12 +53,12 @@ public class SpriteSelecting : BuildData, IBuildMode
             currentBlock.SetSpriteId(spriteSelection.GetHightlightId());
             inv.SetSlot(inv.GetActiveSlot(), currentBlock);
 
-            bm.StartCoroutine(bm.ChangeModeOnRelease(select1, lastMode));
+            bm.StartCoroutine(bm.ChangeModeOnRelease(select1));
         }
 
         if (Input.GetKeyDown(select2))
         {
-            ChangeMode(lastMode);
+            bm.StartCoroutine(bm.ChangeModeOnRelease(select1));
         }
     }
 }

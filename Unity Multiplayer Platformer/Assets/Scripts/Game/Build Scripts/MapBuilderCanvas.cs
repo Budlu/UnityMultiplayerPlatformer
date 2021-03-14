@@ -12,6 +12,8 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
     BuildManager bm;
     Inventory inv;
 
+    bool pointerIn = false;
+
     void Start()
     {
         bm = FindObjectOfType<BuildManager>();
@@ -20,12 +22,17 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //bm.SetPlacing(false);
+        pointerIn = true;
+
+        bm.ChangeMode(new Interacting());
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //bm.ResumeState();
+        pointerIn = false;
+
+        if (bm.GetActiveBuildMode() is Interacting)
+            bm.ChangeToLastMode();
     }
 
     public void UpdateSlot(int slot, Block block)
@@ -37,10 +44,16 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
     public void SelectSlot(int slot)
     {
         highlight.rectTransform.position = items[slot].rectTransform.position;
+        highlight.gameObject.SetActive(true);
     }
 
-    public void SetHighlightVisibility(bool visibility)
+    public void HideHighlight(bool hidden)
     {
-        highlight.gameObject.SetActive(visibility);
+        highlight.gameObject.SetActive(!hidden);
+    }
+
+    public bool GetPointerIn()
+    {
+        return pointerIn;
     }
 }

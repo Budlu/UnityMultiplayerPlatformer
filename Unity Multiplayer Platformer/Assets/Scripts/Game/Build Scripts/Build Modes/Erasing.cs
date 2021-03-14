@@ -6,7 +6,7 @@ public class Erasing : BuildData, IBuildMode
 {
     public void Begin()
     {
-        inv.SetHighlightVisibility(false);
+        inv.HideHighlight(true);
     }
 
     public void ChangeMode(IBuildMode mode)

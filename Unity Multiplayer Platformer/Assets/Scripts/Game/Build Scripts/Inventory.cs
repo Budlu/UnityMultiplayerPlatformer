@@ -47,9 +47,9 @@ public class Inventory : MonoBehaviour
         canvas.UpdateSlot(slot, block);
     }
 
-    public void SetHighlightVisibility(bool visibility)
+    public void HideHighlight(bool hidden)
     {
-        canvas.SetHighlightVisibility(visibility);
+        canvas.HideHighlight(hidden);
     }
 
     private void UpdateKeys()
@@ -83,6 +83,7 @@ public class Inventory : MonoBehaviour
     {
         if (Input.GetKeyDown(erase))
         {
+            canvas.HideHighlight(true);
             bm.ChangeMode(new Erasing());
         }
     }

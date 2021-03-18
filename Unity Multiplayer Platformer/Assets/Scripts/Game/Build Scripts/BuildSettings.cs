@@ -13,10 +13,12 @@ public class BuildSettings
     public int maxEnemies = 10;
     public int maxItems = 10;
 
+    public int buildTime = 300;
+
     public BuildSettings() { }
 
     public BuildSettings(int minBuildWidth, int maxBuildWidth, int minBuildHeight, int maxBuildHeight,
-        int maxTraps, int maxEnemies, int maxItems)
+        int maxTraps, int maxEnemies, int maxItems, int buildTime)
     {
         this.minBuildWidth = minBuildWidth;
         this.maxBuildWidth = maxBuildWidth;
@@ -26,5 +28,7 @@ public class BuildSettings
         this.maxTraps = maxTraps;
         this.maxEnemies = maxEnemies;
         this.maxItems = maxItems;
+
+        this.buildTime = buildTime;
     }
 }

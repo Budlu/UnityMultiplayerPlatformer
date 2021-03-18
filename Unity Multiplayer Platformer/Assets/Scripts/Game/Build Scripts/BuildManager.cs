@@ -12,6 +12,7 @@ public class BuildManager : MonoBehaviour
     public event Action<int, int> onDimensionsChanged;
 
     [SerializeField] Transform worldHolder;
+
     GameObject hoverBlock;
     SpriteRenderer hoverSprite;
     SpriteSelection spriteSelection;
@@ -27,6 +28,7 @@ public class BuildManager : MonoBehaviour
     Inventory inv;
     Camera cam;
     MapBuilderCanvas canvas;
+    Timer timer;
 
     KeyCode select1;
     KeyCode select2;
@@ -55,6 +57,10 @@ public class BuildManager : MonoBehaviour
         inv = GetComponent<Inventory>();
         cam = FindObjectOfType<Camera>();
         canvas = FindObjectOfType<MapBuilderCanvas>();
+        timer = FindObjectOfType<Timer>();
+
+        timer.Initialize(buildSettings.buildTime);
+        timer.StartCountdown();
 
         FindObjectOfType<GridGenerator>().GenerateLines(buildSettings.maxBuildWidth, buildSettings.maxBuildHeight);
 

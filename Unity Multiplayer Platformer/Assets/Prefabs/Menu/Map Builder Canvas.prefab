@@ -3296,6 +3296,7 @@ GameObject:
   - component: {fileID: 4068775378116673044}
   - component: {fileID: 6529777336514945810}
   - component: {fileID: 3181051097259088336}
+  - component: {fileID: 1185795816}
   m_Layer: 5
   m_Name: Timer Text
   m_TagString: Untagged
@@ -3352,10 +3353,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 48
+    m_FontSize: 38
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 4
+    m_MinSize: 3
     m_MaxSize: 48
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -3364,6 +3365,18 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 5:00
+--- !u!114 &1185795816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6333414134559918807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2897cffe44299c843a7dbebddf73ae0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6859204918260160985
 GameObject:
   m_ObjectHideFlags: 0

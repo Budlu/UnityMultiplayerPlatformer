@@ -2,16 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Selecting : MonoBehaviour
+public class Selecting : BuildData, IBuildMode
 {
-    // Start is called before the first frame update
-    void Start()
+    public void Begin()
+    {
+        bm.ChangeModeHighlight(2);
+    }
+
+    public void ChangeMode(IBuildMode mode)
+    {
+        End();
+
+        BuildData.mode = mode;
+        BuildData.mode.Begin();
+    }
+
+    public void End()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void RotateBlock()
+    {
+        
+    }
+
+    public void Update()
     {
         
     }

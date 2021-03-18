@@ -52,11 +52,11 @@ public class Block
             int blockX = x + Mathf.RoundToInt(newOffset.x);
             int blockY = y + Mathf.RoundToInt(newOffset.y);
 
-            world[blockX, blockY] = new Block(BlockType.empty, 0, 0);
+            world[blockY, blockX] = new Block(BlockType.empty, 0, 0);
         }
 
-        world[x, y] = new Block(BlockType.empty, 0, 0);
-        GameObject.Destroy(view[x, y]);
+        world[y, x] = new Block(BlockType.empty, 0, 0);
+        GameObject.Destroy(view[y, x]);
     }
 
     public void PlaceLinkBlocks(Block[,] world, int x, int y)
@@ -68,22 +68,20 @@ public class Block
             int blockX = x + Mathf.RoundToInt(newOffset.x);
             int blockY = y + Mathf.RoundToInt(newOffset.y);
 
-            world[blockX, blockY] = new LinkBlock(type, rotation, spriteId, x, y);
+            world[blockY, blockX] = new LinkBlock(type, rotation, spriteId, x, y);
         }
     }
 
     public bool GetValidPosition(Block[,] world, int x, int y)
     {
-        // check outside positive world bounds
-        if (x < 0 || y < 0)
+        int height = world.GetLength(0);
+        int width = world.GetLength(1);
+        
+        if (x < 0 || y < 0 || x >= width || y >= height)
             return false;
 
-        if (world[x, y].GetBlockType() != BlockType.empty)
+        if (world[y, x].GetBlockType() != BlockType.empty)
             return false;
-
-        // Might be wrong look here later
-        int width = world.GetLength(0);
-        int height = world.GetLength(1);
 
         foreach (Vector2 offset in BlockData.Instance.blockShapes[type])
         {
@@ -98,7 +96,7 @@ public class Block
             if (blockY < 0 || blockY >= height)
                 return false;
 
-            if (world[blockX, blockY].GetBlockType() != BlockType.empty)
+            if (world[blockY, blockX].GetBlockType() != BlockType.empty)
                 return false;
         }
 

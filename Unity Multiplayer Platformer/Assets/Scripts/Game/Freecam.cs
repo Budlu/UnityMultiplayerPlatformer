@@ -18,6 +18,8 @@ public class Freecam : MonoBehaviour
 
     void Start()
     {
+        BuildManager.Instance.onDimensionsChanged += DimensionUpdate;
+
         grid = FindObjectOfType<GridGenerator>();
 
         cam = GetComponent<Camera>();
@@ -31,12 +33,11 @@ public class Freecam : MonoBehaviour
         float leftOffset = invWidth / canvasWidth * 2 * startSize * cam.aspect;
         float rightOffset = rightWidth / canvasWidth * 2 * startSize * cam.aspect;
 
-        float maxXSize = Screen.height / (2 * (canvasWidth - Mathf.RoundToInt(invWidth) - Mathf.RoundToInt(rightWidth)) / width);
-        float maxYSize = height / 2;
-        maxSize = Mathf.Min(maxXSize, maxYSize);
-
         minX -= leftOffset;
         maxX += rightOffset;
+
+        CalculateBounds();
+        CalculateMaxSize();
 
         cam.transform.position = new Vector3(minX, cam.transform.position.y, cam.transform.position.z);
     }
@@ -57,22 +58,9 @@ public class Freecam : MonoBehaviour
         float targetSize = cam.orthographicSize + -dScroll.y * zoomSpeed * Time.deltaTime;
         cam.orthographicSize = Mathf.Clamp(targetSize, minSize, maxSize);
 
-        float size = cam.orthographicSize;
-        float leftOffset = invWidth / canvasWidth * 2 * size * cam.aspect;
-        float rightOffset = rightWidth / canvasWidth * 2 * size * cam.aspect;
+        CalculateBounds();
 
-        minX = size * cam.aspect - 0.5f - leftOffset;
-        maxX = width - (size * cam.aspect - 0.5f) - 1f + rightOffset;
-        minY = size - 0.5f;
-        maxY = height - minY - 1f;
-
-        if (maxX < minX)
-            maxX = minX;
-
-        if (maxY < minY)
-            maxY = minY;
-
-        grid.MultiplyLineWidth(size / startSize);
+        grid.MultiplyLineWidth(cam.orthographicSize / startSize);
     }
 
     void Move()
@@ -100,5 +88,44 @@ public class Freecam : MonoBehaviour
 
         transform.position = new Vector3(Mathf.Clamp(targetPos.x, minX, maxX),
             Mathf.Clamp(targetPos.y, minY, maxY), transform.position.z);
+    }
+
+    public void DimensionUpdate(int width, int height)
+    {
+        this.width = width;
+        this.height = height;
+
+        CalculateMaxSize();
+
+        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, minSize, maxSize);
+        grid.MultiplyLineWidth(cam.orthographicSize / startSize);
+
+        CalculateBounds();
+    }
+
+    private void CalculateMaxSize()
+    {
+        float maxXSize = Screen.height / (2 * (canvasWidth - Mathf.RoundToInt(invWidth) - Mathf.RoundToInt(rightWidth)) / width);
+        float maxYSize = height / 2;
+
+        maxSize = Mathf.Min(maxXSize, maxYSize);
+    }
+
+    private void CalculateBounds()
+    {
+        float size = cam.orthographicSize;
+        float leftOffset = invWidth / canvasWidth * 2 * size * cam.aspect;
+        float rightOffset = rightWidth / canvasWidth * 2 * size * cam.aspect;
+
+        minX = size * cam.aspect - 0.5f - leftOffset;
+        maxX = width - (size * cam.aspect - 0.5f) - 1f + rightOffset;
+        minY = size - 0.5f;
+        maxY = height - minY - 1f;
+
+        if (maxX < minX)
+            maxX = minX;
+
+        if (maxY < minY)
+            maxY = minY;
     }
 }

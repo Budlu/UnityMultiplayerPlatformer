@@ -14,7 +14,7 @@ public class LinkBlock : Block
 
     public override void Erase(Block[,] world, GameObject[,] view, int x, int y)
     {
-        world[parentX, parentY].Erase(world, view, parentX, parentY);
+        world[parentY, parentX].Erase(world, view, parentX, parentY);
     }
 
     public int GetParentX()

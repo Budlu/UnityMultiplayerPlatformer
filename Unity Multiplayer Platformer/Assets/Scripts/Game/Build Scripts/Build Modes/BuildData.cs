@@ -25,6 +25,11 @@ public class BuildData
     protected static IBuildMode mode = new Placing();
     protected static IBuildMode lastMode = new Placing();
 
+    public void Start()
+    {
+        BuildManager.Instance.onDimensionsChanged += WorldUpdate;
+    }
+
     public void SetMapState(Block[,] blockData, GameObject[,] blockView)
     {
         BuildData.blockData = blockData;
@@ -33,8 +38,8 @@ public class BuildData
 
     public void SetDimensions(int height, int width)
     {
-        BuildData.height = height;
         BuildData.width = width;
+        BuildData.height = height;
     }
 
     public void SetSelectKeys(KeyCode select1, KeyCode select2)
@@ -132,5 +137,68 @@ public class BuildData
     public void ForceEnd()
     {
         mode.End();
+    }
+
+    public void WorldUpdate(int width, int height)
+    {
+        if (width == BuildData.width && height < BuildData.height)
+        {
+            for (int i = height; i < BuildData.height; i++)
+            {
+                for (int k = 0; k < BuildData.width; k++)
+                {
+                    blockData[i, k].Erase(blockData, blockView, k, i);
+                }
+            }
+        }
+        else if (width < BuildData.width)
+        {
+            for (int i = 0; i < BuildData.height; i++)
+            {
+                for (int k = width; k < BuildData.width; k++)
+                {
+                    blockData[i, k].Erase(blockData, blockView, k, i);
+                }
+            }
+        }
+
+        ReplaceArrays(width, height);
+
+        BuildData.width = width;
+        BuildData.height = height;
+    }
+
+    private void ReplaceArrays(int width, int height)
+    {
+        Block[,] newBlockData = new Block[height, width];
+        GameObject[,] newBlockView = new GameObject[height, width];
+
+        for (int i = 0; i < Mathf.Min(BuildData.height, height); i++)
+        {
+            for (int k = 0; k < Mathf.Min(BuildData.width, width); k++)
+            {
+                newBlockData[i, k] = blockData[i, k];
+                newBlockView[i, k] = blockView[i, k];
+            }
+        }
+
+        for (int i = BuildData.height; i < height; i++)
+        {
+            for (int k = 0; k < width; k++)
+            {
+                newBlockData[i, k] = new Block(BlockType.empty, 0, 0);
+            }
+        }
+
+        for (int i = 0; i < height; i++)
+        {
+            for (int k = BuildData.width; k < width; k++)
+            {
+                newBlockData[i, k] = new Block(BlockType.empty, 0, 0);
+            }
+        }
+
+        blockData = newBlockData;
+        blockView = newBlockView;
     }
 }

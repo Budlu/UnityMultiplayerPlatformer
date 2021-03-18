@@ -7,7 +7,6 @@ public class Inventory : MonoBehaviour
     [SerializeField] int activeSlot = 0;
     int itemSlots = 9;
 
-    BuildManager bm;
     MapBuilderCanvas canvas;
     Block[] items;
 
@@ -16,9 +15,8 @@ public class Inventory : MonoBehaviour
     KeyCode rotate;
     KeyCode changeSprite;
 
-    void Start()
+    IEnumerator Start()
     {
-        bm = GetComponent<BuildManager>();
         canvas = FindObjectOfType<MapBuilderCanvas>();
 
         items = new Block[itemSlots];
@@ -33,6 +31,7 @@ public class Inventory : MonoBehaviour
         UpdateKeys();
         InputManager.Instance.ControlsChanged += UpdateKeys;
 
+        yield return new WaitForEndOfFrame();
         ChangeSlot(0);
     }
 
@@ -84,7 +83,7 @@ public class Inventory : MonoBehaviour
         if (Input.GetKeyDown(erase))
         {
             canvas.HideHighlight(true);
-            bm.ChangeMode(new Erasing());
+            BuildManager.Instance.ChangeMode(new Erasing());
         }
     }
 
@@ -104,23 +103,23 @@ public class Inventory : MonoBehaviour
         activeSlot = slot;
         Block newBlock = items[slot];
 
-        bm.UpdateHoverBlock(newBlock);
+        BuildManager.Instance.UpdateHoverBlock(newBlock);
         canvas.SelectSlot(slot);
 
-        bm.ChangeMode(new Placing());
+        BuildManager.Instance.ChangeMode(new Placing());
     }
 
     private void CheckRotate()
     {
         if (Input.GetKeyDown(rotate))
-            bm.TryRotate();
+            BuildManager.Instance.TryRotate();
     }
 
     private void CheckSprites()
     {
         if (Input.GetKeyDown(changeSprite))
         {
-            bm.TryChangeSprite(GetSelectedBlock());
+            BuildManager.Instance.TryChangeSprite(GetSelectedBlock());
         }
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,9 @@ public class BuildManager : MonoBehaviour
 {
     public static BuildManager Instance;
     private BuildData buildData = new BuildData();
+    private BuildSettings buildSettings = new BuildSettings();
+
+    public event Action<int, int> onDimensionsChanged;
 
     [SerializeField] Transform worldHolder;
     GameObject hoverBlock;
@@ -15,8 +19,7 @@ public class BuildManager : MonoBehaviour
 
     Color emptyPlace = new Color(0f, 1f, 0f, 0.5f);
 
-    // Get size from somewhere
-    int height = 40, width = 40;
+    int height, width;
     float hoverOffset = -1f;
 
     Block[,] blockData;
@@ -42,13 +45,18 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    void Start()
+    IEnumerator Start()
     {
+        height = (buildSettings.maxBuildHeight + buildSettings.minBuildHeight) / 2;
+        width = (buildSettings.maxBuildWidth + buildSettings.minBuildWidth) / 2;
+
         InitializeWorld();
 
         inv = GetComponent<Inventory>();
         cam = FindObjectOfType<Camera>();
         canvas = FindObjectOfType<MapBuilderCanvas>();
+
+        FindObjectOfType<GridGenerator>().GenerateLines(buildSettings.maxBuildWidth, buildSettings.maxBuildHeight);
 
         spriteSelection = FindObjectOfType<SpriteSelection>();
         spriteSelection.gameObject.SetActive(false);
@@ -61,14 +69,23 @@ public class BuildManager : MonoBehaviour
         UpdateSelectKeys();
         InputManager.Instance.ControlsChanged += UpdateSelectKeys;
 
-        buildData.SetMapState(blockData, blockView);
         buildData.SetDimensions(height, width);
+        buildData.SetMapState(blockData, blockView);
         buildData.SetObjectData(this, worldHolder, hoverBlock, hoverSprite, spriteSelection, selected, inv, cam);
+        buildData.Start();
+
+        yield return new WaitForEndOfFrame();
+        onDimensionsChanged?.Invoke(width, height);
     }
 
     public void ChangeMode(IBuildMode mode)
     {
         buildData.SetBuildMode(mode);
+    }
+
+    public void SetLastMode(IBuildMode mode)
+    {
+        buildData.SetLastMode(mode);
     }
 
     public void ChangeToLastMode()
@@ -148,5 +165,32 @@ public class BuildManager : MonoBehaviour
     public IBuildMode GetActiveBuildMode()
     {
         return buildData.GetActiveBuildMode();
+    }
+
+    public void ChangeModeHighlight(int modeId)
+    {
+        canvas.ChangeModeHighlight(modeId);
+    }
+
+    public void AddWidth(int val)
+    {
+        int newWidth = width + val;
+
+        if (newWidth <= buildSettings.maxBuildWidth && newWidth >= buildSettings.minBuildWidth)
+        {
+            width = newWidth;
+            onDimensionsChanged?.Invoke(width, height);
+        }
+    }
+
+    public void AddHeight(int val)
+    {
+        int newHeight = height + val;
+
+        if (newHeight <= buildSettings.maxBuildHeight && newHeight >= buildSettings.minBuildHeight)
+        {
+            height = newHeight;
+            onDimensionsChanged?.Invoke(width, height);
+        }
     }
 }

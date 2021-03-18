@@ -13,6 +13,7 @@ public class Placing : BuildData, IBuildMode
     {
         hoverBlock.SetActive(true);
         inv.HideHighlight(false);
+        bm.ChangeModeHighlight(0);
 
         MoveHover();
         ChangeHoverBlock(inv.GetSelectedBlock());
@@ -56,18 +57,18 @@ public class Placing : BuildData, IBuildMode
 
     private void Place(Block block, int xPos, int yPos)
     {
-        if (blockView[xPos, yPos] != null)
-            GameObject.Destroy(blockView[xPos, yPos].gameObject);
+        if (blockView[yPos, xPos] != null)
+            GameObject.Destroy(blockView[yPos, xPos].gameObject);
 
         GameObject newBlock = BlockData.Instance.prefabs[block.GetBlockType()];
 
-        blockView[xPos, yPos] = GameObject.Instantiate(newBlock, worldHolder);
-        blockView[xPos, yPos].transform.position = new Vector2(xPos, yPos);
-        blockView[xPos, yPos].transform.rotation = Quaternion.Euler(0, 0, block.GetRotation() * 90);
-        blockView[xPos, yPos].GetComponent<SpriteRenderer>().sprite = BlockData.Instance.sprites[block.GetBlockType()][block.GetSpriteId()];
+        blockView[yPos, xPos] = GameObject.Instantiate(newBlock, worldHolder);
+        blockView[yPos, xPos].transform.position = new Vector2(xPos, yPos);
+        blockView[yPos, xPos].transform.rotation = Quaternion.Euler(0, 0, block.GetRotation() * 90);
+        blockView[yPos, xPos].GetComponent<SpriteRenderer>().sprite = BlockData.Instance.sprites[block.GetBlockType()][block.GetSpriteId()];
 
-        blockData[lastX, lastY] = new Block(block.GetBlockType(), block.GetRotation(), block.GetSpriteId());
-        blockData[lastX, lastY].PlaceLinkBlocks(blockData, lastX, lastY);
+        blockData[yPos, xPos] = new Block(block.GetBlockType(), block.GetRotation(), block.GetSpriteId());
+        blockData[yPos, xPos].PlaceLinkBlocks(blockData, lastX, lastY);
     }
 
     public void ChangeHoverBlock(Block block)

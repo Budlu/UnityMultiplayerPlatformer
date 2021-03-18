@@ -14,11 +14,16 @@ public class GridGenerator : MonoBehaviour
     KeyCode gridToggleKey;
     bool visible = true;
 
-    void Start()
+    IEnumerator Start()
     {
+        yield return new WaitForEndOfFrame();
+
         UpdateGridKey();
         InputManager.Instance.ControlsChanged += UpdateGridKey;
+    }
 
+    public void GenerateLines(int width, int height)
+    {
         for (int i = 0; i <= height; i++)
         {
             GameObject line = Instantiate(gridLine, transform);
@@ -26,7 +31,7 @@ public class GridGenerator : MonoBehaviour
             line.transform.localPosition = new Vector3(width / 2 - 0.5f, i - 0.5f, 0f);
 
             horizontalLines.Add(line);
-        }   
+        }
 
         for (int k = 0; k <= width; k++)
         {
@@ -36,6 +41,9 @@ public class GridGenerator : MonoBehaviour
 
             verticalLines.Add(line);
         }
+
+        this.width = width;
+        this.height = height;
     }
 
     public void MultiplyLineWidth(float multiplier)

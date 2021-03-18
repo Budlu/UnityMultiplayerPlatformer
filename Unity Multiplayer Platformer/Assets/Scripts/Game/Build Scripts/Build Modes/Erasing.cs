@@ -7,6 +7,7 @@ public class Erasing : BuildData, IBuildMode
     public void Begin()
     {
         inv.HideHighlight(true);
+        bm.ChangeModeHighlight(1);
     }
 
     public void ChangeMode(IBuildMode mode)
@@ -29,12 +30,12 @@ public class Erasing : BuildData, IBuildMode
 
         if (Input.GetKey(select1))
         {
-            Block block = blockData[lastX, lastY];
+            Block block = blockData[lastY, lastX];
             block.Erase(blockData, blockView, lastX, lastY);
 
-            GameObject prefab = blockView[lastX, lastY];
+            GameObject prefab = blockView[lastY, lastX];
             if (prefab != null)
-                GameObject.Destroy(blockView[lastX, lastY].gameObject);
+                GameObject.Destroy(blockView[lastY, lastX].gameObject);
         }
     }
 

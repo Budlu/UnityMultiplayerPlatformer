@@ -9,30 +9,31 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
     [SerializeField] Image[] items;
     [SerializeField] Image highlight;
 
-    BuildManager bm;
+    [SerializeField] Image[] modes;
+    [SerializeField] Image modeHighlight;
+
     Inventory inv;
 
     bool pointerIn = false;
 
     void Start()
     {
-        bm = FindObjectOfType<BuildManager>();
-        inv = FindObjectOfType<Inventory>();
+        inv = BuildManager.Instance.GetComponent<Inventory>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         pointerIn = true;
 
-        bm.ChangeMode(new Interacting());
+        BuildManager.Instance.ChangeMode(new Interacting());
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         pointerIn = false;
 
-        if (bm.GetActiveBuildMode() is Interacting)
-            bm.ChangeToLastMode();
+        if (BuildManager.Instance.GetActiveBuildMode() is Interacting)
+            BuildManager.Instance.ChangeToLastMode();
     }
 
     public void UpdateSlot(int slot, Block block)
@@ -45,6 +46,8 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
     {
         highlight.rectTransform.position = items[slot].rectTransform.position;
         highlight.gameObject.SetActive(true);
+
+        ClickChangeMode(0);
     }
 
     public void HideHighlight(bool hidden)
@@ -55,5 +58,31 @@ public class MapBuilderCanvas : MonoBehaviour, IPointerEnterHandler, IPointerExi
     public bool GetPointerIn()
     {
         return pointerIn;
+    }
+
+    public void ClickChangeMode(int modeId)
+    {
+        ChangeModeHighlight(modeId);
+
+        switch (modeId)
+        {
+            case 0:
+                BuildManager.Instance.SetLastMode(new Placing());
+                break;
+            case 1:
+                BuildManager.Instance.SetLastMode(new Erasing());
+                break;
+            case 2:
+                BuildManager.Instance.SetLastMode(new Selecting());
+                break;
+            default:
+                BuildManager.Instance.ChangeMode(new Interacting());
+                break;
+        }
+    }
+
+    public void ChangeModeHighlight(int modeId)
+    {
+        modeHighlight.transform.position = modes[modeId].transform.position;
     }
 }
